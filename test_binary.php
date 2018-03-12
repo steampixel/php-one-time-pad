@@ -8,9 +8,9 @@ for($i=1;$i<=100;$i++){
 
   $plaintext = file_get_contents($filename);
 
-  $pad = OneTimePad::generatePad($plaintext);
-  $cipher = OneTimePad::encrypt($plaintext,$pad);
-  $plaintext_dectypted = OneTimePad::decrypt($cipher,$pad);
+  $pad = OneTimePadBinary::generatePad($plaintext);
+  $cipher = OneTimePadBinary::encrypt($plaintext,$pad);
+  $plaintext_dectypted = OneTimePadBinary::decrypt($cipher,$pad);
 
   //file_put_contents($filename.'.cipher',$cipher);
   //file_put_contents($filename.'.decrypted',$plaintext_dectypted);
