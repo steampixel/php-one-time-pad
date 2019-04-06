@@ -3,7 +3,7 @@
 class OneTimePadString{
   
   // Define the supported characters
-  static $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .:,;?!_-*/+=()[]{}<>&%$§^"\'';
+  static $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .:,;?!_-*/+=()[]{}<>&%$^"\'';
   
   // Return the modulo of a given number
   // PHPs % operator cannot deal with negative numbers. They will stay negative
