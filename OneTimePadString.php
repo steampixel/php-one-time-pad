@@ -3,7 +3,22 @@
 class OneTimePadString{
   
   // Define the supported characters
-  static $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .:,;?!_-*/+=()[]{}<>&%$^"\'';
+  static $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .:,;?!_-#*/+=()}<>&%$^"\''."\r\n";
+  
+  static function getCharacterMap() {
+	return self::$characters;
+  }
+  
+  static function setCharacterMap($characters) {
+	self::$characters = $characters;
+  }
+  
+  // Textarea newlines on Windows will produce two characters and will destroy the charater map.
+  // So we have to convert this
+  static function convertEOL($string, $to = "\n")
+  {   
+    return preg_replace("/\r\n|\r|\n/", $to, $string);
+  }
   
   // Return the modulo of a given number
   // PHPs % operator cannot deal with negative numbers. They will stay negative
@@ -12,21 +27,26 @@ class OneTimePadString{
   }
   
   static public function generatePad($plaintext){
-    $plaintext_length = strlen($plaintext);// Get the length of the plaintext
+	$plaintext = self::convertEOL($plaintext);
+    $plaintext_length = mb_strlen($plaintext);// Get the length of the plaintext
+	echo 'Generating pad length of '.$plaintext_length.'<br>';
     $pad = '';
     for ($i = 0; $i < $plaintext_length; $i++) {
       // Note: Use random_int instead of rand since its better for generating cryptographic save random numbers
-      $pad.= self::$characters[random_int(0, strlen(self::$characters)-1)];
+      $pad.= self::$characters[random_int(0, mb_strlen(self::$characters)-1)];
     }
     return $pad;
   }
   
   static public function encrypt($plaintext,$pad){
     
-    $plaintext_length = strlen($plaintext);// Get the length of the plaintext
-    $key_length = strlen($pad);// Get the length of the pad
+	$plaintext = self::convertEOL($plaintext);
+	$pad = self::convertEOL($pad);
+	
+    $plaintext_length = mb_strlen($plaintext);// Get the length of the plaintext
+    $pad_length = mb_strlen($pad);// Get the length of the pad
     
-    if($key_length!=$plaintext_length){
+    if($pad_length!=$plaintext_length){
       echo 'Your pad length must equal the plaintext length!'."\r\n";
       return false;
     }
@@ -39,17 +59,17 @@ class OneTimePadString{
     $unsupported_plaintext_characters = [];
     
     // Iterate over the pad
-    for ($i = 0; $i < $key_length; $i++) {
+    for ($i = 0; $i < $pad_length; $i++) {
       
       // Convert plaintext and pad characters into numbers based on their position in the $characters array
-      $key_char_number = strpos(self::$characters,$pad[$i]);
+      $key_char_number = mb_strpos(self::$characters,$pad[$i]);
       
-      $plaintext_char_number = strpos(self::$characters,$plaintext[$i]);
+      $plaintext_char_number = mb_strpos(self::$characters,$plaintext[$i]);
 
       if($plaintext_char_number!==false){
         
         // Add the numbers with the length of the possible chars as modulo
-        $result_number = self::modulo(($plaintext_char_number + $key_char_number), strlen(self::$characters));
+        $result_number = self::modulo(($plaintext_char_number + $key_char_number), mb_strlen(self::$characters));
       
         // Convert the number back to a char
         $result_char = self::$characters[$result_number];
@@ -72,7 +92,7 @@ class OneTimePadString{
     $unsupported_plaintext_characters = array_unique($unsupported_plaintext_characters);
     
     if(count($unsupported_plaintext_characters)){
-      echo 'Warning! Cannot replace the characters "'.implode('", "',$unsupported_plaintext_characters).' in plaintext"! They are currently not in the list of supported chars and will not be encoded. But you can simply add them to the list'."\r\n";
+      echo 'Warning! Cannot replace the characters "'.implode('", "',$unsupported_plaintext_characters).'" in plaintext! They are currently not in the list of supported chars and will not be encoded. But you can simply add them to the list'."\r\n";
     }
     
     return $cipher;
@@ -81,10 +101,15 @@ class OneTimePadString{
   
   static public function decrypt($cipher, $pad){
     
-    $cipher_length = strlen($cipher); // Get the length of the cipher
-    $key_length = strlen($pad); // Get the length of the pad
+	$cipher = self::convertEOL($cipher);
+	$pad = self::convertEOL($pad);
+	
+    $cipher_length = mb_strlen($cipher); // Get the length of the cipher
+    $pad_length = mb_strlen($pad); // Get the length of the pad
     
-    if($key_length!=$cipher_length){
+    if($pad_length!=$cipher_length){
+		echo 'cipher_length: '.$cipher_length.'<br>';
+		echo 'pad_length: '.$pad_length.'<br>';
       echo 'Your pad length must be equal to the cipher length!';
       return false;
     }
@@ -92,17 +117,17 @@ class OneTimePadString{
     $plaintext = ''; //Initiate the plaintext as empty string
     
     // Iterate over the pad
-    for ($i = 0; $i < $key_length; $i++) {
+    for ($i = 0; $i < $pad_length; $i++) {
       
       // Convert cipher and pad characters into numbers based on their position in $characters array
-      $key_char_number = strpos(self::$characters,$pad[$i]);
+      $key_char_number = mb_strpos(self::$characters,$pad[$i]);
       
-      $cipher_char_number = strpos(self::$characters,$cipher[$i]);
+      $cipher_char_number = mb_strpos(self::$characters,$cipher[$i]);
       
       if($cipher_char_number!==false){
       
         // Substract the numbers with the length of the possible chars as modulo
-        $result_number = self::modulo(($cipher_char_number - $key_char_number), strlen(self::$characters));
+        $result_number = self::modulo(($cipher_char_number - $key_char_number), mb_strlen(self::$characters));
         
         // Convert the number back to a char
         $result_char = self::$characters[$result_number];
