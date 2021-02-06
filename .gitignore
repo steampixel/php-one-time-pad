@@ -1,2 +1,8 @@
 
 docker-*
+
+# testfiles
+lorem.md
+lorem.md.cipher
+lorem.md.pad
+lorem.md.plain
