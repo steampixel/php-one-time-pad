@@ -1,0 +1,22 @@
+
+html {
+  padding:0;
+  margin:0;
+}
+
+label {
+  font-weight:bold;
+}
+
+p {
+  font-size: 1rem;
+}
+
+textarea {
+  margin-bottom:1rem;
+}
+
+.container {
+  max-width:768px;
+  margin:auto;
+}

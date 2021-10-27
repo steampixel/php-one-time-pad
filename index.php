@@ -1,45 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-	
+    <link rel="stylesheet" type="text/css" href="assets/style.css" />
   </head>
   <body>
-	
-	<?PHP
-		
-		include('OneTimePadBinary.php');
-		
-		if(isset($_REQUEST['encrypt'])) {
-			
-			if(empty($_REQUEST['pad'])) {
-				$pad = OneTimePadBinary::generatePad($_REQUEST['text']);
-				$_REQUEST['pad'] = bin2hex($pad);
-			}else{
-				$pad = hex2bin($_REQUEST['pad']);
-			}
-			
-			$_REQUEST['text'] = bin2hex(OneTimePadBinary::encrypt($_REQUEST['text'], $pad));
-			
-		}
-		
-		if(isset($_REQUEST['decrypt'])) {
+    <div class="container">
+    	<h1>Welcome!</h1>
+      <p>
+        This is a one time pad encoder / decoder written in PHP. Choose your encoder function:<br>
+      </p>
 
-			$_REQUEST['text'] = OneTimePadBinary::decrypt(hex2bin($_REQUEST['text']), hex2bin($_REQUEST['pad']));
-			
-		}
-		
-	?>
-	
-	This is a simple hex string based implementation of the binary one time pad. Just copy your plaintext into the text field and press encrypt. The pad will then generated randomly. To decrypt some data paste the ciphertext into the text field and copy your pad into the pad field. Than press the decrypt button.
-	
-	<form method="post">
-		Text:
-		<textarea style="height:200px;width:100%;" name="text"><?=$_REQUEST['text'] ?></textarea>
-		Pad:
-		<textarea style="height:200px;width:100%;" name="pad"><?=$_REQUEST['pad'] ?></textarea>
-		<button name="encrypt" <?=(isset($_REQUEST['encrypt']) ? 'disabled' : '') ?>>Encrypt</button>
-		<button name="decrypt" <?=(isset($_REQUEST['decrypt']) ? 'disabled' : '') ?>>Decrypt</button>
-	</form>
-	
+      <a href="form-binary.php">Decrypt / encrypt on binary level</a><br>
+
+      <a href="form-string.php">Decrypt / encrypt on character level</a>
+    </div>
+
   </body>
 </html>
