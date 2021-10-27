@@ -3,7 +3,7 @@
 class OneTimePadString{
 
   // Define the supported characters
-  static $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .-_,';
+  static $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ:.-_,!?#[]()<>';
 
   static $errors = [];
 
@@ -21,10 +21,10 @@ class OneTimePadString{
 
   // Textarea newlines on Windows will produce two characters and will destroy the charater map.
   // So we have to convert this
-  static function convertEOL($string, $to = "\n")
-  {
-    return preg_replace("/\r\n|\r|\n/", $to, $string);
-  }
+  // static function convertEOL($string, $to = "\n")
+  // {
+  //   return preg_replace("/\r\n|\r|\n/", $to, $string);
+  // }
 
   // Return the modulo of a given number
   // PHPs % operator cannot deal with negative numbers. They will stay negative
@@ -33,7 +33,7 @@ class OneTimePadString{
   }
 
   static public function generatePad($plaintext){
-    $plaintext = self::convertEOL($plaintext);
+    // $plaintext = self::convertEOL($plaintext);
     $plaintext_length = mb_strlen($plaintext);// Get the length of the plaintext
     // array_push(self::$infos, 'Generating pad length of '.$plaintext_length);
     $pad = '';
@@ -46,8 +46,8 @@ class OneTimePadString{
 
   static public function encrypt($plaintext,$pad){
 
-	$plaintext = self::convertEOL($plaintext);
-	$pad = self::convertEOL($pad);
+  	// $plaintext = self::convertEOL($plaintext);
+  	// $pad = self::convertEOL($pad);
 
     $plaintext_length = mb_strlen($plaintext);// Get the length of the plaintext
     $pad_length = mb_strlen($pad);// Get the length of the pad
@@ -107,8 +107,8 @@ class OneTimePadString{
 
   static public function decrypt($cipher, $pad) {
 
-  	$cipher = self::convertEOL($cipher);
-  	$pad = self::convertEOL($pad);
+  	// $cipher = self::convertEOL($cipher);
+  	// $pad = self::convertEOL($pad);
 
     $cipher_length = mb_strlen($cipher); // Get the length of the cipher
     $pad_length = mb_strlen($pad); // Get the length of the pad
