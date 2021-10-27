@@ -30,7 +30,6 @@ php cli.php encrypt text.md path_to_pad.md path_to_cipher.md
 
 ### Decrypt something:
 To decrypt a cipher text together with a given pad you have to specify these files together with the target plaintext file:
-If you want specify the target files like this. For example point the pad to one and the cipher to another USB stick.
 ```
 php cli.php decrypt pad.md cipher.md text.md
 ```

@@ -1,8 +1,8 @@
 <?PHP
 
-include('OneTimePadBinary.php');
+include('../src/OneTimePadBinary.php');
 
-$filename = 'testfiles/test.txt';
+$filename = '../testfiles/test.txt';
 
 for($i=1;$i<=100;$i++){
 
